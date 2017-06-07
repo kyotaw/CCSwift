@@ -7,12 +7,12 @@
 //
 
 
-public enum ProductCode : String {
-    case btcJpy = "BTC_JPY"
+public enum CurrencyPair : String {
+    case btcJpy = "btc_jpy"
     
     public var orderUnit: Double {
         switch self {
-        case .btcJpy: return 0.001
+        case .btcJpy: return 0.00000001
         }
     }
 }

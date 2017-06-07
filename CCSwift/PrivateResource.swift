@@ -48,6 +48,38 @@ class PrivateResource : Resource {
         }
     }
     
+    static func orders(order: Order, apiKeys: ApiKeys, nonce: NonceProtocol, callback: @escaping CCCallback) {
+        do {
+            let url = Resource.endPointUrl + "/exchange/orders"
+            var params = [
+                "pair": order.currencyPairParameter,
+                "order_type": order.orderTypeParameter
+            ]
+            if let rate = order.rateParameter {
+                params["rate"] = rate
+            }
+            if let amount = order.amountParameter {
+                params["amount"] = amount
+            }
+            if let marketBuyAmount = order.marketBuyAmountParameter {
+                params["market_buy_amount"] = marketBuyAmount
+            }
+            if let positionId = order.positionIdParameter {
+                params["position_id"] = positionId
+            }
+            if let stopLossRate = order.stopLossRateParameter {
+                params["stop_loss_rate"] = stopLossRate
+            }
+            
+            let headers = try self.makeHeaders(params: params, url: url, nonce: nonce, apiKeys: apiKeys)
+            self.post(url: url, params: params, headers: headers, callback: callback)
+        } catch CCErrorCode.cryptionError {
+            callback(CCError(errorCode: .cryptionError), nil)
+        } catch {
+            callback(CCError(), nil)
+        }
+    }
+    
     fileprivate static func makeHeaders(params: Dictionary<String, String>, url: String, nonce: NonceProtocol, apiKeys: ApiKeys) throws -> Dictionary<String, String> {
         
         var jsonBody = ""

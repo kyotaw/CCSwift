@@ -30,19 +30,23 @@ public class PrivateApi {
         }
     }
     
-    open func balance(_ callback: @escaping CCCallback) {
+    public func balance(_ callback: @escaping CCCallback) {
         PrivateResource.balance(apiKeys: self.keys, nonce: self.nonce, callback: callback)
     }
     
-    open var apiKey: String {
+    public func orders(order: Order, callback: @escaping CCCallback) {
+        PrivateResource.orders(order: order, apiKeys: self.keys, nonce: self.nonce, callback: callback)
+    }
+    
+    public var apiKey: String {
         get { return self.keys.apiKey }
     }
     
-    open var secretKey: String {
+    public var secretKey: String {
         get { return self.keys.secretKey }
     }
 
-    open var nonceValue: Int64 {
+    public var nonceValue: Int64 {
         get { return self.nonce.currentValue }
     }
     
