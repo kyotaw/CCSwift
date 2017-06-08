@@ -13,5 +13,8 @@ public typealias CCCallback = ((_ err: CCError?, _ data: JSON?) -> Void)
 
 public class PublicApi {
     
+    static public func ticker(callback: @escaping CCCallback) {
+        PublicResource().ticker(callback: callback)
+    }
 
 }

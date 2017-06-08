@@ -12,4 +12,9 @@ import Alamofire
 
 internal class PublicResource : Resource {
     
+    func ticker(callback: @escaping CCCallback) {
+        let url = Resource.endPointUrl + "/ticker"
+        self.get(url, headers: [:], callback: callback)
+    }
+    
 }

@@ -38,10 +38,34 @@ class CCSwiftTests: XCTestCase {
         
         let balanceTest = self.expectation(description: "balanceTest")
         privateApi.balance() { (err, res) in
-            XCTAssertNil(err, "balanceTest. err should be nil")
-            XCTAssertNotNil(res, "balanceTest. res should not be nil")
+            XCTAssertNil(err)
+            XCTAssertNotNil(res)
             print(res!)
             balanceTest.fulfill()
+        }
+        self.waitForExpectations(timeout: 10.0, handler: nil)
+    }
+    
+    func testOrders() {
+        let privateApi = PrivateApi(apiKey: apiKey, secretKey: secretKey)
+        let order = BuyBtcJpyOrder(rate: 200000, amount: CurrencyPair.btcJpy.orderUnit)
+        
+        let minOrderTest = self.expectation(description: "minOrderTest")
+        privateApi.orders(order: order) { (err, res) in
+            XCTAssertNotNil(err)
+            print(err!)
+            minOrderTest.fulfill()
+        }
+        self.waitForExpectations(timeout: 10.0, handler: nil)
+    }
+    
+    func testTicker() {
+        let tickerTest = self.expectation(description: "tickerTest")
+        PublicApi.ticker() { (err, res) in
+            XCTAssertNil(err)
+            XCTAssertNotNil(res)
+            print(res!)
+            tickerTest.fulfill()
         }
         self.waitForExpectations(timeout: 10.0, handler: nil)
     }

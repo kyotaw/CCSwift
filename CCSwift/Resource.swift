@@ -15,7 +15,7 @@ import SwiftyJSON
 
 class Resource {
     
-    static func get(_ url: String, headers: Dictionary<String, String>, callback: @escaping ((_ err: CCError?, _ res: JSON?) -> Void)) {
+    func get(_ url: String, headers: Dictionary<String, String>, callback: @escaping ((_ err: CCError?, _ res: JSON?) -> Void)) {
         Alamofire.request(url, method: .get, headers: headers).responseJSON() { response in
             switch response.result {
             case .failure(_):
@@ -25,28 +25,12 @@ class Resource {
                 let data = JSON(response.result.value! as AnyObject)
                 print(data)
                 
-                if let success = data.dictionary?["success"]?.bool {
-                    if success {
-                        callback(nil, data)
-                        return
-                    }
-                }
-                
-                // error
-                if let errorMsg = data.dictionary?["error"]?.string {
-                    if let errorCode = CCErrorCode(rawValue: errorMsg) {
-                        callback(CCError(errorCode: errorCode, message: errorMsg), nil)
-                    } else {
-                        callback(CCError(), nil)
-                    }
-                    return
-                }
-                callback(CCError(), nil)
+                callback(nil, data)
             }
         }
     }
     
-    static func post(
+    func post(
         url: String,
         params: Dictionary<String, String>,
         headers: Dictionary<String, String>,
@@ -66,10 +50,18 @@ class Resource {
                     if let success = data.dictionary?["success"]?.bool {
                         if success {
                             callback(nil, data)
-                        } else {
-                            callback(CCError(), nil)
                         }
                     }
+                    // error
+                    if let errorMsg = data.dictionary?["error"]?.string {
+                        if let errorCode = CCErrorCode(rawValue: errorMsg) {
+                            callback(CCError(errorCode: errorCode, message: errorMsg), nil)
+                        } else {
+                            callback(CCError(message: errorMsg), nil)
+                        }
+                        return
+                    }
+                    callback(CCError(), nil)
                 }
         }
     }

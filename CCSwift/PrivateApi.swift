@@ -31,11 +31,11 @@ public class PrivateApi {
     }
     
     public func balance(_ callback: @escaping CCCallback) {
-        PrivateResource.balance(apiKeys: self.keys, nonce: self.nonce, callback: callback)
+        PrivateResource().balance(apiKeys: self.keys, nonce: self.nonce, callback: callback)
     }
     
     public func orders(order: Order, callback: @escaping CCCallback) {
-        PrivateResource.orders(order: order, apiKeys: self.keys, nonce: self.nonce, callback: callback)
+        PrivateResource().orders(order: order, apiKeys: self.keys, nonce: self.nonce, callback: callback)
     }
     
     public var apiKey: String {

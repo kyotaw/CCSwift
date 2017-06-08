@@ -12,7 +12,7 @@ public enum CurrencyPair : String {
     
     public var orderUnit: Double {
         switch self {
-        case .btcJpy: return 0.00000001
+        case .btcJpy: return 0.005
         }
     }
 }
