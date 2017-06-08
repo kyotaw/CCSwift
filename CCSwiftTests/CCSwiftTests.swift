@@ -81,4 +81,15 @@ class CCSwiftTests: XCTestCase {
         self.waitForExpectations(timeout: 10.0, handler: nil)
     }
     
+    func testOrderBook() {
+        let orderBookTest = self.expectation(description: "orderBookTest")
+        PublicApi.orderBook(limit: 10) { (err, res) in
+            XCTAssertNil(err)
+            XCTAssertNotNil(res)
+            print(res!)
+            orderBookTest.fulfill()
+        }
+        self.waitForExpectations(timeout: 10.0, handler: nil)
+    }
+    
 }

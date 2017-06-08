@@ -21,4 +21,8 @@ public class PublicApi {
         PublicResource().trades(offset: offset, callback: callback)
     }
 
+    static public func orderBook(limit: Int, callback: @escaping CCCallback) {
+        PublicResource().orderBook(limit: limit, callback: callback)
+    }
+    
 }

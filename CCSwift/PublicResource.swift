@@ -22,4 +22,9 @@ internal class PublicResource : Resource {
         self.get(url, params: ["offset": offset.description], callback: callback)
     }
     
+    func orderBook(limit: Int, callback: @escaping CCCallback) {
+        let url = Resource.endPointUrl + "/order_books"
+        self.get(url, params: ["limit": limit.description], callback: callback)
+    }
+    
 }
