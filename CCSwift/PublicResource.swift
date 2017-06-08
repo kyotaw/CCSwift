@@ -14,7 +14,12 @@ internal class PublicResource : Resource {
     
     func ticker(callback: @escaping CCCallback) {
         let url = Resource.endPointUrl + "/ticker"
-        self.get(url, headers: [:], callback: callback)
+        self.get(url, callback: callback)
+    }
+    
+    func trades(offset: Int, callback: @escaping CCCallback) {
+        let url = Resource.endPointUrl + "/trades"
+        self.get(url, params: ["offset": offset.description], callback: callback)
     }
     
 }

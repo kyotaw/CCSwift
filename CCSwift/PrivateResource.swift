@@ -102,8 +102,13 @@ class PrivateResource : Resource {
         return headers
     }
     
-    internal override func get(_ url: String, headers: Dictionary<String, String>, callback: @escaping (_ err: CCError?, _ res: JSON?) -> Void) {
-        super.get(url, headers: headers) { (err, res) in
+    internal override func get(
+        _ url: String,
+        params: Dictionary<String, String>=[:],
+        headers: Dictionary<String, String>=[:],
+        callback: @escaping CCCallback) {
+        
+        super.get(url, params: params, headers: headers) { (err, res) in
          
             if let success = res?.dictionary?["success"]?.bool {
                 if success {

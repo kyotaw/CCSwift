@@ -70,4 +70,15 @@ class CCSwiftTests: XCTestCase {
         self.waitForExpectations(timeout: 10.0, handler: nil)
     }
     
+    func testTrades() {
+        let tradesTest = self.expectation(description: "tradesTest")
+        PublicApi.trades(offset: 0) { (err, res) in
+            XCTAssertNil(err)
+            XCTAssertNotNil(res)
+            print(res!)
+            tradesTest.fulfill()
+        }
+        self.waitForExpectations(timeout: 10.0, handler: nil)
+    }
+    
 }

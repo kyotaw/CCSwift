@@ -16,5 +16,9 @@ public class PublicApi {
     static public func ticker(callback: @escaping CCCallback) {
         PublicResource().ticker(callback: callback)
     }
+    
+    static public func trades(offset: Int=0, callback: @escaping CCCallback) {
+        PublicResource().trades(offset: offset, callback: callback)
+    }
 
 }

@@ -15,8 +15,14 @@ import SwiftyJSON
 
 class Resource {
     
-    func get(_ url: String, headers: Dictionary<String, String>, callback: @escaping ((_ err: CCError?, _ res: JSON?) -> Void)) {
-        Alamofire.request(url, method: .get, headers: headers).responseJSON() { response in
+    func get(
+        _ url: String,
+        params: Dictionary<String, String>=[:],
+        headers: Dictionary<String, String>=[:],
+        callback: @escaping CCCallback) {
+        
+        let queryUrl = Resource.addQueryParameters(url: url, params: params)
+        Alamofire.request(queryUrl, method: .get, headers: headers).responseJSON() { response in
             switch response.result {
             case .failure(_):
                 callback(CCError(errorCode: .connectionError), nil)
@@ -34,7 +40,7 @@ class Resource {
         url: String,
         params: Dictionary<String, String>,
         headers: Dictionary<String, String>,
-        callback: @escaping ((_ err: CCError?, _ res: JSON?) -> Void)) {
+        callback: @escaping CCCallback) {
         
         Alamofire.request(url, method: .post, parameters: params, encoding: JSONEncoding.default, headers: headers)
             .responseJSON(queue: DispatchQueue.global(qos: DispatchQoS.QoSClass.default
