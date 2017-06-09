@@ -48,7 +48,7 @@ class PrivateResource : Resource {
         }
     }
     
-    func orders(order: Order, apiKeys: ApiKeys, nonce: NonceProtocol, callback: @escaping CCCallback) {
+    func newOrder(order: Order, apiKeys: ApiKeys, nonce: NonceProtocol, callback: @escaping CCCallback) {
         do {
             let url = Resource.endPointUrl + "/exchange/orders"
             var params = [
@@ -80,6 +80,19 @@ class PrivateResource : Resource {
         }
     }
     
+    func unsettledOrderList(apiKeys: ApiKeys, nonce: NonceProtocol, callback: @escaping CCCallback) {
+        do {
+            let url = Resource.endPointUrl + "/exchange/orders/opens"
+            let params = Dictionary<String, String>()
+            let headers = try self.makeHeaders(params: params, url: url, nonce: nonce, apiKeys: apiKeys)
+            self.get(url, headers: headers, callback: callback)
+        } catch CCErrorCode.cryptionError {
+            callback(CCError(errorCode: .cryptionError), nil)
+        } catch {
+            callback(CCError(), nil)
+        }
+    }
+    
     fileprivate func makeHeaders(params: Dictionary<String, String>, url: String, nonce: NonceProtocol, apiKeys: ApiKeys) throws -> Dictionary<String, String> {
         
         var jsonBody = ""
@@ -100,35 +113,6 @@ class PrivateResource : Resource {
         ]
 
         return headers
-    }
-    
-    internal override func get(
-        _ url: String,
-        params: Dictionary<String, String>=[:],
-        headers: Dictionary<String, String>=[:],
-        callback: @escaping CCCallback) {
-        
-        super.get(url, params: params, headers: headers) { (err, res) in
-         
-            if let success = res?.dictionary?["success"]?.bool {
-                if success {
-                    callback(nil, res)
-                    return
-                }
-            }
-            
-            // error
-            if let errorMsg = res?.dictionary?["error"]?.string {
-                if let errorCode = CCErrorCode(rawValue: errorMsg) {
-                    callback(CCError(errorCode: errorCode, message: errorMsg), nil)
-                } else {
-                    callback(CCError(message: errorMsg), nil)
-                }
-                return
-            }
-            callback(CCError(), nil)
-            
-        }
     }
     
 }

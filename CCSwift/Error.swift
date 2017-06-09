@@ -13,6 +13,7 @@ public enum CCErrorCode: String, Error {
     case connectionError = "connectionError"
     
     case invalidAuthentication = "invalid authentication"
+    case badRequest = "bad_request"
     
     case unknownError = "unknownError"
 }

@@ -17,12 +17,16 @@ public class PublicApi {
         PublicResource().ticker(callback: callback)
     }
     
-    static public func trades(offset: Int=0, callback: @escaping CCCallback) {
-        PublicResource().trades(offset: offset, callback: callback)
+    static public func publicTrades(offset: Int=0, callback: @escaping CCCallback) {
+        PublicResource().publicTrades(offset: offset, callback: callback)
     }
 
     static public func orderBook(limit: Int, callback: @escaping CCCallback) {
         PublicResource().orderBook(limit: limit, callback: callback)
+    }
+    
+    static public func orderRate(currencyPair: CurrencyPair, orderType: OrderType, callback: @escaping CCCallback) {
+        PublicResource().orderRate(currencyPair: currencyPair, orderType: orderType, callback: callback)
     }
     
 }

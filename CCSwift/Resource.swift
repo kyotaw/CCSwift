@@ -31,6 +31,22 @@ class Resource {
                 let data = JSON(response.result.value! as AnyObject)
                 print(data)
                 
+                if let success = data.dictionary?["success"]?.bool {
+                    if success {
+                        callback(nil, data)
+                        return
+                    }
+                }
+                
+                // error
+                if let errorMsg = data.dictionary?["error"]?.string {
+                    if let errorCode = CCErrorCode(rawValue: errorMsg) {
+                        callback(CCError(errorCode: errorCode, message: errorMsg), nil)
+                    } else {
+                        callback(CCError(message: errorMsg), nil)
+                    }
+                    return
+                }
                 callback(nil, data)
             }
         }

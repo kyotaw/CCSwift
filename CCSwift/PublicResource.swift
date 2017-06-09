@@ -17,7 +17,7 @@ internal class PublicResource : Resource {
         self.get(url, callback: callback)
     }
     
-    func trades(offset: Int, callback: @escaping CCCallback) {
+    func publicTrades(offset: Int, callback: @escaping CCCallback) {
         let url = Resource.endPointUrl + "/trades"
         self.get(url, params: ["offset": offset.description], callback: callback)
     }
@@ -25,6 +25,15 @@ internal class PublicResource : Resource {
     func orderBook(limit: Int, callback: @escaping CCCallback) {
         let url = Resource.endPointUrl + "/order_books"
         self.get(url, params: ["limit": limit.description], callback: callback)
+    }
+    
+    func orderRate(currencyPair: CurrencyPair, orderType: OrderType, callback: @escaping CCCallback) {
+        let url = Resource.endPointUrl + "/exchange/orders/rate"
+        let params = [
+            "order_type": orderType.rawValue,
+            "pair": currencyPair.rawValue
+        ]
+        self.get(url, params: params, callback: callback)
     }
     
 }

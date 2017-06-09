@@ -46,12 +46,12 @@ class CCSwiftTests: XCTestCase {
         self.waitForExpectations(timeout: 10.0, handler: nil)
     }
     
-    func testOrders() {
+    func testNewOrder() {
         let privateApi = PrivateApi(apiKey: apiKey, secretKey: secretKey)
         let order = BuyBtcJpyOrder(rate: 200000, amount: CurrencyPair.btcJpy.orderUnit)
         
         let minOrderTest = self.expectation(description: "minOrderTest")
-        privateApi.orders(order: order) { (err, res) in
+        privateApi.newOrder(order: order) { (err, res) in
             XCTAssertNotNil(err)
             print(err!)
             minOrderTest.fulfill()
@@ -70,9 +70,9 @@ class CCSwiftTests: XCTestCase {
         self.waitForExpectations(timeout: 10.0, handler: nil)
     }
     
-    func testTrades() {
+    func testPublicTrades() {
         let tradesTest = self.expectation(description: "tradesTest")
-        PublicApi.trades(offset: 0) { (err, res) in
+        PublicApi.publicTrades(offset: 0) { (err, res) in
             XCTAssertNil(err)
             XCTAssertNotNil(res)
             print(res!)
@@ -88,6 +88,39 @@ class CCSwiftTests: XCTestCase {
             XCTAssertNotNil(res)
             print(res!)
             orderBookTest.fulfill()
+        }
+        self.waitForExpectations(timeout: 10.0, handler: nil)
+    }
+    
+    func testOrderRate() {
+        let orderRateBuyTest = self.expectation(description: "orderRateBuyTest")
+        PublicApi.orderRate(currencyPair: CurrencyPair.btcJpy, orderType: OrderType.buy) { (err, res) in
+            XCTAssertNil(err)
+            XCTAssertNotNil(res)
+            print(res!)
+            orderRateBuyTest.fulfill()
+        }
+        self.waitForExpectations(timeout: 10.0, handler: nil)
+        
+        let orderRateSellTest = self.expectation(description: "orderRateSellTest")
+        PublicApi.orderRate(currencyPair: CurrencyPair.btcJpy, orderType: OrderType.buy) { (err, res) in
+            XCTAssertNil(err)
+            XCTAssertNotNil(res)
+            print(res!)
+            orderRateSellTest.fulfill()
+        }
+        self.waitForExpectations(timeout: 10.0, handler: nil)
+    }
+    
+    func testUnsettledOrderList() {
+        let privateApi = PrivateApi(apiKey: apiKey, secretKey: secretKey)
+        
+        let orderListTest = self.expectation(description: "orderListTest")
+        privateApi.unsettledOrderList() { (err, res) in
+            XCTAssertNil(err)
+            XCTAssertNotNil(res)
+            print(res!)
+            orderListTest.fulfill()
         }
         self.waitForExpectations(timeout: 10.0, handler: nil)
     }
