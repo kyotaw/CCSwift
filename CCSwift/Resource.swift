@@ -29,25 +29,7 @@ class Resource {
                 return
             case .success:
                 let data = JSON(response.result.value! as AnyObject)
-                print(data)
-                
-                if let success = data.dictionary?["success"]?.bool {
-                    if success {
-                        callback(nil, data)
-                        return
-                    }
-                }
-                
-                // error
-                if let errorMsg = data.dictionary?["error"]?.string {
-                    if let errorCode = CCErrorCode(rawValue: errorMsg) {
-                        callback(CCError(errorCode: errorCode, message: errorMsg), nil)
-                    } else {
-                        callback(CCError(message: errorMsg), nil)
-                    }
-                    return
-                }
-                callback(nil, data)
+                self.processResponse(err: nil, res: data, callback: callback)
             }
         }
     }
@@ -69,21 +51,28 @@ class Resource {
                     return
                 case .success:
                     let data = JSON(response.result.value! as AnyObject)
-                    if let success = data.dictionary?["success"]?.bool {
-                        if success {
-                            callback(nil, data)
-                        }
-                    }
-                    // error
-                    if let errorMsg = data.dictionary?["error"]?.string {
-                        if let errorCode = CCErrorCode(rawValue: errorMsg) {
-                            callback(CCError(errorCode: errorCode, message: errorMsg), nil)
-                        } else {
-                            callback(CCError(message: errorMsg), nil)
-                        }
-                        return
-                    }
-                    callback(CCError(), nil)
+                    self.processResponse(err: nil, res: data, callback: callback)
+                }
+        }
+    }
+    
+    func delete(
+        url: String,
+        headers: Dictionary<String, String>,
+        callback: @escaping CCCallback) {
+        
+        Alamofire.request(url, method: .delete, encoding: JSONEncoding.default, headers: headers)
+            .responseJSON(queue: DispatchQueue.global(qos: DispatchQoS.QoSClass.default
+            )) {
+                response in
+                
+                switch response.result {
+                case .failure(_):
+                    callback(CCError(errorCode: .connectionError), nil)
+                    return
+                case .success:
+                    let data = JSON(response.result.value! as AnyObject)
+                    self.processResponse(err: nil, res: data, callback: callback)
                 }
         }
     }
@@ -98,6 +87,30 @@ class Resource {
         }
         queryUrl.characters.removeLast()
         return queryUrl
+    }
+    
+    fileprivate func processResponse(err: CCError? , res: JSON?, callback: CCCallback) {
+        if err != nil {
+            callback(err, nil)
+            return
+        }
+        
+        if let success = res?.dictionary?["success"]?.bool {
+            if success {
+                callback(nil, res)
+            }
+        }
+        
+        if let errorMsg = res?.dictionary?["error"]?.string {
+            if let errorCode = CCErrorCode(rawValue: errorMsg) {
+                callback(CCError(errorCode: errorCode, message: errorMsg), nil)
+            } else {
+                callback(CCError(message: errorMsg), nil)
+            }
+            return
+        }
+        
+        callback(CCError(), nil)
     }
     
     static let endPointUrl = "https://coincheck.com/api"

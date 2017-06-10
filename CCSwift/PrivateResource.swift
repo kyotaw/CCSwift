@@ -93,6 +93,20 @@ class PrivateResource : Resource {
         }
     }
     
+    func cancelOrder(orderId: String, apiKeys: ApiKeys, nonce: NonceProtocol, callback: @escaping CCCallback) {
+        do {
+            let url = Resource.endPointUrl + "/exchange/orders/" + orderId
+            let params = Dictionary<String, String>()
+            let headers = try self.makeHeaders(params: params, url: url, nonce: nonce, apiKeys: apiKeys)
+            self.delete(url: url, headers: headers, callback: callback)
+        } catch CCErrorCode.cryptionError {
+            callback(CCError(errorCode: .cryptionError), nil)
+        } catch {
+            callback(CCError(), nil)
+        }
+    }
+    
+    
     fileprivate func makeHeaders(params: Dictionary<String, String>, url: String, nonce: NonceProtocol, apiKeys: ApiKeys) throws -> Dictionary<String, String> {
         
         var jsonBody = ""

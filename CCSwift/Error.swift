@@ -11,9 +11,11 @@ public enum CCErrorCode: String, Error {
     case nonceExceedLimit = "nonceExceedLimit"
     case cryptionError = "cryptionError"
     case connectionError = "connectionError"
+    case invalidOrderId = "invalid order id"
     
     case invalidAuthentication = "invalid authentication"
     case badRequest = "bad_request"
+    case orderDoNotExist = "The order doesn\'t exist."
     
     case unknownError = "unknownError"
 }

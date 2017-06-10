@@ -22,6 +22,7 @@ public enum OrderType : String {
 
 
 public protocol Order {
+    var orderId: String? { get }
     var currencyPairParameter: String { get }
     var orderTypeParameter: String { get }
     var rateParameter: String? { get }
@@ -33,10 +34,16 @@ public protocol Order {
 
 
 public class CCOrder : Order {
-    internal init(currencyPair: CurrencyPair, orderType: OrderType) {
+    internal init(id: String?=nil, currencyPair: CurrencyPair, orderType: OrderType) {
+        self.id = id
         self.currencyPair = currencyPair
         self.orderType = orderType
     }
+    
+    public var orderId: String? {
+        return self.id
+    }
+    
     public var currencyPairParameter: String {
         return self.currencyPair.rawValue
     }
@@ -65,8 +72,10 @@ public class CCOrder : Order {
         return nil
     }
     
+    public let id: String?
     public let currencyPair: CurrencyPair
     public let orderType: OrderType
+    
 }
 
 public class BtcJpyOrder : CCOrder {

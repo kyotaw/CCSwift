@@ -125,4 +125,17 @@ class CCSwiftTests: XCTestCase {
         self.waitForExpectations(timeout: 10.0, handler: nil)
     }
     
+    func testCancelOrder() {
+        let privateApi = PrivateApi(apiKey: apiKey, secretKey: secretKey)
+        
+        let cancelOrderTest = self.expectation(description: "cancelOrderTest")
+        privateApi.cancelOrder(orderId: "ddd") { (err, res) in
+            XCTAssertNil(err)
+            XCTAssertNotNil(res)
+            print(res!)
+            cancelOrderTest.fulfill()
+        }
+        self.waitForExpectations(timeout: 10.0, handler: nil)
+    }
+    
 }

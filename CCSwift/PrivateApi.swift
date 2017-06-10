@@ -42,6 +42,10 @@ public class PrivateApi {
         PrivateResource().unsettledOrderList(apiKeys: self.keys, nonce: self.nonce, callback: callback)
     }
     
+    public func cancelOrder(orderId: String, callback: @escaping CCCallback) {
+        PrivateResource().cancelOrder(orderId: orderId, apiKeys: self.keys, nonce: self.nonce, callback: callback)
+    }
+    
     public var apiKey: String {
         get { return self.keys.apiKey }
     }
